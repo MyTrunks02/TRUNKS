@@ -1,0 +1,317 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ---------- Enums ----------
+
+enum UserRole {
+  CANDIDATE
+  RECRUITER
+  ADMIN
+}
+
+enum ExperienceLevel {
+  ENTRY
+  JUNIOR
+  MID
+  SENIOR
+  LEAD
+  EXECUTIVE
+}
+
+enum SubscriptionPlan {
+  FREE
+  GOLD
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum WorkMode {
+  REMOTE
+  ONSITE
+  HYBRID
+}
+
+enum ApplicationStatus {
+  APPLIED
+  REVIEWED
+  SHORTLISTED
+  REJECTED
+  OFFERED
+}
+
+enum AssessmentStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  EXPIRED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PAST_DUE
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  MODERATOR
+  SUPPORT
+}
+
+// ---------- Models ----------
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  firstName     String
+  lastName      String
+  role          UserRole
+  passwordHash  String
+  emailVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  candidate Candidate?
+  recruiter Recruiter?
+  admin     Admin?
+
+  @@index([role])
+  @@map("users")
+}
+
+model Candidate {
+  id               String           @id @default(cuid())
+  userId           String           @unique
+  title            String?
+  bio              String?
+  location         String?
+  experience       ExperienceLevel?
+  resumeUrl        String?
+  trunksScore      Float?           @default(0)
+  subscriptionPlan SubscriptionPlan @default(FREE)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications       Application[]
+  assessments        Assessment[]
+  jobMatchingResults JobMatchingResult[]
+  subscriptions      Subscription[]
+
+  @@index([userId])
+  @@map("candidates")
+}
+
+model Recruiter {
+  id                 String             @id @default(cuid())
+  userId             String             @unique
+  companyId          String
+  title              String?
+  verificationStatus VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  jobs         Job[]
+  applications Application[]
+
+  @@index([userId])
+  @@index([companyId])
+  @@map("recruiters")
+}
+
+model Company {
+  id                 String             @id @default(cuid())
+  name               String             @unique
+  description        String?
+  website            String?
+  location           String?
+  industry           String?
+  verificationStatus VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  recruiters Recruiter[]
+  jobs       Job[]
+
+  @@map("companies")
+}
+
+model Skill {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  category String?
+
+  jobRequiredSkills JobRequiredSkill[]
+  assessments       Assessment[]
+
+  @@map("skills")
+}
+
+model Job {
+  id          String   @id @default(cuid())
+  companyId   String
+  recruiterId String
+  title       String
+  description String
+  jobType     JobType
+  workMode    WorkMode
+  location    String?
+  minSalary   Int?
+  maxSalary   Int?
+  postedDate  DateTime @default(now())
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  company            Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  recruiter          Recruiter           @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  requiredSkills     JobRequiredSkill[]
+  applications       Application[]
+  jobMatchingResults JobMatchingResult[]
+
+  @@index([companyId])
+  @@index([recruiterId])
+  @@index([isActive])
+  @@map("jobs")
+}
+
+model JobRequiredSkill {
+  id         String  @id @default(cuid())
+  jobId      String
+  skillId    String
+  isRequired Boolean @default(true)
+
+  job   Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, skillId])
+  @@index([jobId])
+  @@index([skillId])
+  @@map("job_required_skills")
+}
+
+model Application {
+  id              String            @id @default(cuid())
+  candidateId     String
+  jobId           String
+  recruiterId     String
+  status          ApplicationStatus @default(APPLIED)
+  matchPercentage Float?
+  appliedAt       DateTime          @default(now())
+
+  candidate     Candidate                  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job           Job                        @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  recruiter     Recruiter                  @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  statusHistory ApplicationStatusHistory[]
+
+  @@unique([candidateId, jobId])
+  @@index([candidateId])
+  @@index([jobId])
+  @@index([recruiterId])
+  @@index([status])
+  @@map("applications")
+}
+
+model ApplicationStatusHistory {
+  id            String             @id @default(cuid())
+  applicationId String
+  oldStatus     ApplicationStatus?
+  newStatus     ApplicationStatus
+  changedAt     DateTime           @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("application_status_history")
+}
+
+model Assessment {
+  id          String           @id @default(cuid())
+  candidateId String
+  skillId     String
+  score       Float?
+  status      AssessmentStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  skill     Skill     @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([candidateId, skillId])
+  @@index([candidateId])
+  @@index([skillId])
+  @@map("assessments")
+}
+
+model JobMatchingResult {
+  id              String   @id @default(cuid())
+  candidateId     String
+  jobId           String
+  matchPercentage Float
+  createdAt       DateTime @default(now())
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job       Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([candidateId, jobId])
+  @@index([candidateId])
+  @@index([jobId])
+  @@map("job_matching_results")
+}
+
+model Subscription {
+  id             String             @id @default(cuid())
+  candidateId    String
+  plan           SubscriptionPlan
+  status         SubscriptionStatus @default(ACTIVE)
+  paymentGateway String?
+  amount         Float?
+  startedAt      DateTime           @default(now())
+  expiresAt      DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  candidate Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+  @@map("subscriptions")
+}
+
+model Admin {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  role      AdminRole @default(SUPPORT)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("admins")
+}
