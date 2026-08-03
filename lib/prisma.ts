@@ -1,18 +1,24 @@
 import { PrismaClient } from "./generated/prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`${name} environment variable is not set`);
+  }
+  return value;
+}
 
 // Prisma 7 requires an explicit driver adapter instead of connecting from a
 // bare `url` in the schema. See prisma/schema.prisma's `datasource` block.
 function createPrismaClient(): PrismaClient {
-  const adapter = new PrismaBetterSqlite3({
-    url: process.env.DATABASE_URL ?? "file:./dev.db",
-  });
+  const adapter = new PrismaPg({ connectionString: requireEnv("DATABASE_URL") });
 
   return new PrismaClient({ adapter });
 }
 
-// Reuse a single client across hot reloads in development so we don't open
-// a new SQLite connection (and file handle) on every module reload.
+// Reuse a single client (and its underlying connection pool) across hot
+// reloads in development instead of opening a new pool on every reload.
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };

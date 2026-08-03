@@ -2,10 +2,11 @@ import { hash } from "bcryptjs";
 import { prisma } from "../lib/prisma";
 import { JobType, UserRole, VerificationStatus, WorkMode } from "../lib/generated/prisma/enums";
 
-// Deliberately not `import "dotenv/config"` here: prisma.config.ts only
-// loads `.env`, not `.env.local` where DATABASE_URL actually lives for this
-// project. Loading dotenv in this file would shadow it with the wrong
-// value, so we rely on lib/prisma.ts's `file:./dev.db` fallback instead.
+// Deliberately not `import "dotenv/config"` here: prisma.config.ts already
+// loads `.env.local` (where DATABASE_URL actually lives) and, when this
+// script runs via `prisma db seed`, that loaded env is inherited by this
+// process. Loading dotenv here too would load `.env` instead and shadow it
+// with the wrong value.
 
 const SALT_ROUNDS = 12;
 const SEED_RECRUITER_PASSWORD = "TrunksSeed123";
