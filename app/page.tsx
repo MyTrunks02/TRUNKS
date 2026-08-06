@@ -1,185 +1,234 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const STATS = [
-  { value: "10,000+", label: "Verified Candidates" },
-  { value: "500+", label: "Companies Hiring" },
-  { value: "92%", label: "Match Accuracy" },
-  { value: "48hrs", label: "Avg. Time to Shortlist" },
+  { value: "3 days", label: "Avg. time to first match" },
+  { value: "92%", label: "Candidates matched to relevant roles" },
+  { value: "10,000+", label: "Active job seekers" },
+  { value: "500+", label: "Hiring teams on TRUNKS" },
 ] as const;
 
 const FEATURES = [
   {
-    title: "AI-Powered Matching",
-    description:
-      "TRUNKS scores every application against a job's required skills, so candidates and recruiters both see match quality instantly.",
-    icon: "🎯",
+    num: "01",
+    title: "Matching that reads the whole picture",
+    copy: "TRUNKS looks at skills, experience and trajectory, not just keywords on a resume, so candidates surface for roles they're actually right for.",
   },
   {
-    title: "Verified Companies",
-    description:
-      "Every employer goes through a verification pipeline before their listings go live, cutting down on fake or low-quality postings.",
-    icon: "✅",
+    num: "02",
+    title: "Built for recruiters",
+    copy: "Screen a shortlist of qualified candidates first. Spend your time on conversations, not sifting through applications that never fit.",
   },
   {
-    title: "Skill Assessments",
-    description:
-      "Candidates prove what they know with scored skill assessments, turning a resume claim into evidence recruiters can trust.",
-    icon: "📊",
+    num: "03",
+    title: "Built for candidates",
+    copy: "Get matched to roles that fit what you've actually done, not whichever buzzwords made it onto your resume.",
+  },
+  {
+    num: "04",
+    title: "Faster from first look to offer",
+    copy: "Less back-and-forth, fewer dead-end interviews. TRUNKS surfaces the matches worth a conversation on both sides.",
   },
 ] as const;
 
-const STEPS = [
-  { step: "01", title: "Create your profile", description: "Candidates list skills and experience; recruiters verify their company." },
-  { step: "02", title: "Get matched", description: "Our scoring engine ranks every candidate against a job's required skills." },
-  { step: "03", title: "Hire with confidence", description: "Move top matches through shortlisting, offers, and onboarding — all in one place." },
+const FAQS = [
+  {
+    q: "How does TRUNKS match candidates and jobs?",
+    a: "TRUNKS' AI reads a candidate's full experience and a role's real requirements, then ranks matches by fit rather than keyword overlap.",
+  },
+  {
+    q: "Is TRUNKS free for job seekers?",
+    a: "Yes. Creating a profile and getting matched is free for candidates, always.",
+  },
+  {
+    q: "How do recruiters get started?",
+    a: "Request a demo and our team will set up your team account, post your open roles, and walk you through your first matches.",
+  },
+  {
+    q: "What kinds of roles does TRUNKS support?",
+    a: "TRUNKS covers full-time, contract and hybrid roles across most industries, with the deepest coverage in tech, operations and sales.",
+  },
 ] as const;
 
 export default function Home() {
+  const router = useRouter();
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [email, setEmail] = useState("");
+
+  function toggleFaq(i: number) {
+    setOpenFaq((current) => (current === i ? null : i));
+  }
+
+  function handleSignup(e: FormEvent) {
+    e.preventDefault();
+    router.push(email ? `/signup?email=${encodeURIComponent(email)}` : "/signup");
+  }
+
   return (
-    <div className="flex flex-1 flex-col bg-white dark:bg-navy-950">
-      <nav className="sticky top-0 z-20 border-b border-navy-100 bg-white/80 backdrop-blur dark:border-navy-800 dark:bg-navy-950/80">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-navy-700 dark:text-white">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy-700 text-sm font-black text-gold-400 dark:bg-teal-500 dark:text-navy-950">
+    <div className="flex min-h-screen flex-1 flex-col bg-navy-950 text-white">
+      <nav className="sticky top-0 z-20 border-b border-white/10 bg-navy-950/80 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-10">
+          <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-500 text-sm font-black text-navy-950">
               T
             </span>
             TRUNKS
           </Link>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="rounded-full px-4 py-2 text-sm font-medium text-navy-700 transition-colors hover:bg-navy-50 dark:text-white dark:hover:bg-navy-900"
-            >
-              Log In
-            </Link>
-            <Link
-              href="/signup"
-              className="rounded-full bg-teal-500 px-5 py-2 text-sm font-medium text-white shadow-sm shadow-teal-500/30 transition-all hover:-translate-y-0.5 hover:bg-teal-600 hover:shadow-md hover:shadow-teal-500/40"
-            >
-              Sign Up
-            </Link>
+          <div className="hidden items-center gap-8 text-sm text-navy-100 sm:flex">
+            <a href="#product" className="transition-colors hover:text-teal-400">
+              Product
+            </a>
+            <a href="#recruiters" className="transition-colors hover:text-teal-400">
+              For recruiters
+            </a>
+            <a href="#faq" className="transition-colors hover:text-teal-400">
+              FAQ
+            </a>
           </div>
+          <Link
+            href="/signup"
+            className="rounded-full bg-gold-500 px-5 py-2 text-sm font-semibold text-navy-950 transition-colors hover:bg-gold-400"
+          >
+            Get started
+          </Link>
         </div>
       </nav>
 
-      <section className="relative overflow-hidden bg-navy-950">
+      <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-24 left-1/4 h-96 w-96 rounded-full bg-teal-500/20 blur-3xl" />
-          <div className="absolute top-1/3 right-0 h-80 w-80 rounded-full bg-gold-500/10 blur-3xl" />
+          <div className="absolute -top-32 right-[-10%] h-[32rem] w-[32rem] rounded-full bg-teal-500/20 blur-3xl" />
+          <div className="absolute top-1/3 left-[-15%] h-96 w-96 rounded-full bg-gold-500/10 blur-3xl" />
         </div>
 
-        <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 py-24 text-center sm:py-32">
-          <span className="animate-fade-in-up rounded-full border border-gold-500/40 bg-gold-500/10 px-4 py-1 text-sm font-medium text-gold-400">
-            TRUNKS
-          </span>
-          <h1 className="animate-fade-in-up animate-delay-100 max-w-3xl text-4xl font-bold tracking-tight text-white sm:text-6xl">
-            Find the right job.{" "}
-            <span className="bg-gradient-to-r from-teal-400 to-gold-400 bg-clip-text text-transparent">
-              Find the right hire.
-            </span>
+        <div className="relative mx-auto max-w-6xl px-6 py-24 sm:px-10 sm:py-32">
+          <h1 className="animate-fade-in-up max-w-3xl text-[clamp(2.75rem,6.4vw,5.25rem)] font-bold leading-[1.1] tracking-tight opacity-0">
+            <span className="block">Hiring that finally fits.</span>
+            <span className="block">For both sides of the table.</span>
           </h1>
-          <p className="animate-fade-in-up animate-delay-200 max-w-xl text-lg leading-8 text-navy-100">
-            TRUNKS matches candidates and recruiters using verified skills, not just keywords — so every
-            application is a signal worth acting on.
+          <p className="animate-fade-in-up animate-delay-100 mt-6 max-w-xl text-lg leading-8 text-navy-100 opacity-0">
+            TRUNKS uses AI to match job seekers with roles they&apos;re actually right for, and
+            recruiters with candidates worth their time — so the search takes hours, not weeks.
           </p>
-          <div className="animate-fade-in-up animate-delay-300 mt-4 flex flex-col gap-4 sm:flex-row">
+          <div className="animate-fade-in-up animate-delay-200 mt-8 flex flex-wrap gap-4 opacity-0">
             <Link
               href="/signup"
-              className="flex h-12 items-center justify-center rounded-full bg-teal-500 px-8 text-base font-medium text-white shadow-lg shadow-teal-500/30 transition-all hover:-translate-y-0.5 hover:bg-teal-400 hover:shadow-xl hover:shadow-teal-500/40"
+              className="flex h-12 items-center justify-center rounded-full bg-gold-500 px-8 text-base font-semibold text-navy-950 shadow-lg shadow-gold-500/20 transition-all hover:-translate-y-0.5 hover:bg-gold-400 hover:shadow-xl hover:shadow-gold-500/30"
             >
-              Find Your Next Role
+              Get started free
             </Link>
-            <Link
-              href="/signup"
-              className="flex h-12 items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 text-base font-medium text-white backdrop-blur transition-all hover:-translate-y-0.5 hover:border-gold-500/50 hover:bg-white/10"
+            <a
+              href="#recruiters"
+              className="flex h-12 items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 text-base font-medium text-white backdrop-blur transition-all hover:-translate-y-0.5 hover:border-teal-400/50 hover:bg-white/10"
             >
-              Post a Job
-            </Link>
+              For recruiters
+            </a>
           </div>
         </div>
       </section>
 
-      <section className="border-b border-navy-100 bg-navy-50 dark:border-navy-800 dark:bg-navy-900">
-        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 px-6 py-14 sm:grid-cols-4">
+      <section aria-label="TRUNKS, by the numbers" className="bg-navy-900">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-14 sm:grid-cols-4 sm:px-10">
           {STATS.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center text-center">
-              <p className="text-3xl font-bold text-navy-700 sm:text-4xl dark:text-teal-400">{stat.value}</p>
-              <p className="mt-1 text-sm text-navy-600 dark:text-navy-100">{stat.label}</p>
+            <div key={stat.label}>
+              <p className="text-[clamp(2.25rem,3.6vw,3.25rem)] font-bold leading-[1.1] text-white">
+                {stat.value}
+              </p>
+              <p className="mt-2 text-xs uppercase tracking-wider text-navy-100/70">{stat.label}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-5xl px-6 py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-navy-950 dark:text-white">Built for signal, not noise</h2>
-          <p className="mt-3 text-base text-navy-600 dark:text-navy-100">
-            Every feature in TRUNKS exists to cut through resume keyword-stuffing and get the right people talking.
-          </p>
-        </div>
-
-        <div className="mt-12 grid gap-8 sm:grid-cols-3">
-          {FEATURES.map((feature) => (
-            <div
-              key={feature.title}
-              className="group flex flex-col gap-3 rounded-2xl border border-navy-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-teal-500/40 hover:shadow-lg hover:shadow-teal-500/10 dark:border-navy-800 dark:bg-navy-900"
-            >
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-2xl transition-transform group-hover:scale-110 dark:bg-teal-500/10">
-                {feature.icon}
-              </span>
-              <h3 className="text-lg font-semibold text-navy-950 dark:text-white">{feature.title}</h3>
-              <p className="text-sm leading-6 text-navy-600 dark:text-navy-100">{feature.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-t border-navy-100 bg-navy-50 dark:border-navy-800 dark:bg-navy-900">
-        <div className="mx-auto max-w-5xl px-6 py-24">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-navy-950 dark:text-white">How it works</h2>
-          </div>
-          <div className="mt-12 grid gap-8 sm:grid-cols-3">
-            {STEPS.map((item) => (
-              <div key={item.step} className="relative flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-sm dark:bg-navy-950">
-                <span className="text-sm font-bold text-gold-600 dark:text-gold-400">{item.step}</span>
-                <h3 className="text-lg font-semibold text-navy-950 dark:text-white">{item.title}</h3>
-                <p className="text-sm leading-6 text-navy-600 dark:text-navy-100">{item.description}</p>
+      <div className="mx-auto w-full max-w-6xl px-6 sm:px-10">
+        <section id="product" className="py-16 sm:py-24">
+          <span className="mb-4 block text-sm font-semibold uppercase tracking-wider text-teal-400">
+            Why TRUNKS
+          </span>
+          <div>
+            {FEATURES.map((item) => (
+              <div
+                key={item.num}
+                className="grid grid-cols-1 gap-4 border-t border-white/10 py-7 sm:grid-cols-[minmax(64px,160px)_minmax(0,420px)_minmax(0,1fr)] sm:items-baseline sm:gap-x-12"
+              >
+                <p className="text-sm font-semibold text-teal-400">{item.num}</p>
+                <h2 className="text-2xl font-semibold tracking-tight text-white">{item.title}</h2>
+                <p className="max-w-[52ch] text-[15.5px] leading-relaxed text-navy-100/80">
+                  {item.copy}
+                </p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="relative overflow-hidden bg-navy-950">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -bottom-24 left-1/3 h-72 w-72 rounded-full bg-teal-500/20 blur-3xl" />
-        </div>
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 py-20 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Ready to make your next move?</h2>
-          <p className="max-w-xl text-base text-navy-100">
-            Join thousands of candidates and recruiters already matching on verified skills.
-          </p>
-          <Link
-            href="/signup"
-            className="flex h-12 items-center justify-center rounded-full bg-gold-500 px-8 text-base font-medium text-navy-950 shadow-lg shadow-gold-500/20 transition-all hover:-translate-y-0.5 hover:bg-gold-400 hover:shadow-xl hover:shadow-gold-500/30"
-          >
-            Get Started Free
-          </Link>
-        </div>
-      </section>
-
-      <footer className="border-t border-navy-800 bg-navy-950 px-6 py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
-          <span className="flex items-center gap-2 text-sm font-bold text-white">
-            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-teal-500 text-xs font-black text-navy-950">
-              T
-            </span>
-            TRUNKS
+        <section id="faq" className="py-14 sm:py-16">
+          <span className="mb-4 block text-sm font-semibold uppercase tracking-wider text-teal-400">
+            FAQ
           </span>
-          <p className="text-xs text-navy-100">© {new Date().getFullYear()} TRUNKS. All rights reserved.</p>
-        </div>
-      </footer>
+          <div>
+            {FAQS.map((item, i) => (
+              <div key={item.q} className="border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => toggleFaq(i)}
+                  aria-expanded={openFaq === i}
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left font-semibold text-white"
+                >
+                  <span>{item.q}</span>
+                  <span className="flex-none text-xl leading-none text-teal-400">
+                    {openFaq === i ? "−" : "+"}
+                  </span>
+                </button>
+                {openFaq === i && (
+                  <p className="max-w-[60ch] pb-5 text-[15.5px] leading-relaxed text-navy-100/80">
+                    {item.a}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <hr className="border-white/10" />
+
+        <section id="recruiters" className="py-14 sm:py-16">
+          <h3 className="text-2xl font-semibold tracking-tight text-white">
+            Ready to find your match?
+          </h3>
+          <p className="mt-3 max-w-xl text-[15.5px] leading-relaxed text-navy-100/80">
+            Get started free as a candidate, or bring your team on board — recruiters get a demo
+            before they commit.
+          </p>
+          <form onSubmit={handleSignup} className="mt-6 flex max-w-md flex-col gap-3 sm:flex-row">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              aria-label="Email address"
+              className="min-h-11 flex-1 rounded-lg border border-white/15 bg-navy-900 px-3 text-sm text-white placeholder:text-navy-100/50 focus:border-teal-400 focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="min-h-11 rounded-lg bg-gold-500 px-6 text-sm font-semibold text-navy-950 transition-colors hover:bg-gold-400"
+            >
+              Get started
+            </button>
+          </form>
+          <p className="mt-4">
+            <a href="#recruiters" className="text-sm text-teal-400 hover:text-teal-300">
+              Hiring? Request a recruiter demo →
+            </a>
+          </p>
+        </section>
+
+        <footer className="border-t border-white/10 py-10 text-xs text-navy-100/60">
+          © {new Date().getFullYear()} TRUNKS. All rights reserved.
+        </footer>
+      </div>
     </div>
   );
 }
