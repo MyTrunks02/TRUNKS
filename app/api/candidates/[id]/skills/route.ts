@@ -8,6 +8,25 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
+/**
+ * Lists the skill assessments (pending or scored) attached to a candidate.
+ */
+export async function GET(_request: NextRequest, { params }: RouteParams) {
+  try {
+    await requireAuth();
+    const { id } = await params;
+
+    const assessments = await prisma.assessment.findMany({
+      where: { candidateId: id },
+      include: { skill: true },
+    });
+
+    return successResponse(assessments);
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await requireAuth();

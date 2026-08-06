@@ -25,7 +25,7 @@ export function Input({
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <label htmlFor={id} className="text-sm font-medium text-navy-700 dark:text-navy-100">
         {label}
       </label>
       <input
@@ -35,7 +35,7 @@ export function Input({
         value={value}
         onChange={onChange}
         required={required}
-        className={`rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white ${className}`}
+        className={`rounded-lg border border-navy-100 px-3 py-2 text-sm text-navy-950 outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 dark:border-navy-700 dark:bg-navy-950 dark:text-white ${className}`}
       />
     </div>
   );

@@ -25,16 +25,19 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <nav className="sticky top-0 z-10 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-black/80">
+    <div className="flex min-h-screen flex-col bg-navy-50 dark:bg-navy-950">
+      <nav className="sticky top-0 z-10 border-b border-navy-100 bg-white/80 backdrop-blur dark:border-navy-800 dark:bg-navy-950/80">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-8">
             <Link
               href="/recruiter/dashboard"
-              className="flex items-center gap-2 text-lg font-bold tracking-tight text-zinc-950 dark:text-white"
+              className="flex items-center gap-2 text-lg font-bold tracking-tight text-navy-700 dark:text-white"
             >
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy-700 text-sm font-black text-gold-400 dark:bg-teal-500 dark:text-navy-950">
+                T
+              </span>
               TRUNKS
-              <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400">
+              <span className="rounded-full bg-gold-100 px-2 py-0.5 text-xs font-medium text-gold-700 dark:bg-gold-500/10 dark:text-gold-400">
                 Recruiter
               </span>
             </Link>
@@ -47,8 +50,8 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
                     href={link.href}
                     className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400"
-                        : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white"
+                        ? "bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400"
+                        : "text-navy-600 hover:bg-navy-50 hover:text-navy-900 dark:text-navy-100 dark:hover:bg-navy-900 dark:hover:text-white"
                     }`}
                   >
                     {link.label}
@@ -61,13 +64,13 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-900"
+            className="rounded-full border border-navy-100 px-4 py-2 text-sm font-medium text-navy-900 transition-colors hover:bg-navy-50 dark:border-navy-700 dark:text-white dark:hover:bg-navy-900"
           >
             Log Out
           </button>
         </div>
 
-        <div className="flex items-center gap-1 overflow-x-auto border-t border-zinc-200 px-6 py-2 sm:hidden dark:border-zinc-800">
+        <div className="flex items-center gap-1 overflow-x-auto border-t border-navy-100 px-6 py-2 sm:hidden dark:border-navy-800">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
@@ -76,8 +79,8 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
                 href={link.href}
                 className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400"
-                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-white"
+                    ? "bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400"
+                    : "text-navy-600 hover:bg-navy-50 hover:text-navy-900 dark:text-navy-100 dark:hover:bg-navy-900 dark:hover:text-white"
                 }`}
               >
                 {link.label}

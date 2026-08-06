@@ -16,9 +16,9 @@ interface ButtonProps {
 }
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "bg-indigo-600 text-white hover:bg-indigo-500",
+  primary: "bg-teal-500 text-white hover:bg-teal-600",
   secondary:
-    "border border-zinc-300 text-zinc-900 hover:bg-zinc-100 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-900",
+    "border border-navy-100 text-navy-900 hover:bg-navy-50 dark:border-navy-700 dark:text-white dark:hover:bg-navy-900",
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {

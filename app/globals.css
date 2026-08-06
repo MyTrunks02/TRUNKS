@@ -3,6 +3,30 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* TRUNKS brand palette */
+  --color-navy-950: #0a1a26;
+  --color-navy-900: #0f2536;
+  --color-navy-800: #16324a;
+  --color-navy-700: #1a3a52;
+  --color-navy-600: #24506e;
+  --color-navy-500: #2f6588;
+  --color-navy-100: #dde6ec;
+  --color-navy-50: #f2f6f8;
+
+  --color-teal-700: #21756c;
+  --color-teal-600: #278a7f;
+  --color-teal-500: #2d9b8f;
+  --color-teal-400: #3fc0b0;
+  --color-teal-100: #d9f1ed;
+  --color-teal-50: #eefaf8;
+
+  --color-gold-700: #a98a24;
+  --color-gold-600: #c19b2c;
+  --color-gold-500: #d4af37;
+  --color-gold-400: #e6c869;
+  --color-gold-100: #faf1d7;
+  --color-gold-50: #fdf9ee;
 }
 
 @theme inline {
@@ -10,6 +34,35 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-navy-950: var(--color-navy-950);
+  --color-navy-900: var(--color-navy-900);
+  --color-navy-800: var(--color-navy-800);
+  --color-navy-700: var(--color-navy-700);
+  --color-navy-600: var(--color-navy-600);
+  --color-navy-500: var(--color-navy-500);
+  --color-navy-100: var(--color-navy-100);
+  --color-navy-50: var(--color-navy-50);
+  --color-navy: var(--color-navy-700);
+
+  --color-teal-700: var(--color-teal-700);
+  --color-teal-600: var(--color-teal-600);
+  --color-teal-500: var(--color-teal-500);
+  --color-teal-400: var(--color-teal-400);
+  --color-teal-100: var(--color-teal-100);
+  --color-teal-50: var(--color-teal-50);
+  --color-teal: var(--color-teal-500);
+
+  --color-gold-700: var(--color-gold-700);
+  --color-gold-600: var(--color-gold-600);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-400: var(--color-gold-400);
+  --color-gold-100: var(--color-gold-100);
+  --color-gold-50: var(--color-gold-50);
+  --color-gold: var(--color-gold-500);
+
+  --animate-fade-in-up: fade-in-up 0.6s ease-out both;
+  --animate-fade-in: fade-in 0.6s ease-out both;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +75,38 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-delay-100 {
+  animation-delay: 100ms;
+}
+.animate-delay-200 {
+  animation-delay: 200ms;
+}
+.animate-delay-300 {
+  animation-delay: 300ms;
+}
+.animate-delay-400 {
+  animation-delay: 400ms;
 }

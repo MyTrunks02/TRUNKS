@@ -54,7 +54,7 @@ export default function SignupPage() {
         return;
       }
 
-      router.push(result.data.role === UserRole.CANDIDATE ? "/dashboard" : "/");
+      router.push(result.data.role === UserRole.CANDIDATE ? "/dashboard" : "/recruiter/dashboard");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -62,20 +62,31 @@ export default function SignupPage() {
     }
   }
 
-  return (
-    <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 py-16 dark:bg-black">
-      <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-        <h1 className="text-2xl font-semibold text-zinc-950 dark:text-white">Create your account</h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Join TRUNKS as a candidate or recruiter.</p>
+  const inputClasses =
+    "rounded-lg border border-navy-100 px-3 py-2 text-sm text-navy-950 outline-none transition-colors focus:border-teal-500 focus:ring-1 focus:ring-teal-500 dark:border-navy-700 dark:bg-navy-950 dark:text-white";
+  const labelClasses = "text-sm font-medium text-navy-700 dark:text-navy-100";
 
-        <div className="mt-6 grid grid-cols-2 gap-2 rounded-full bg-zinc-100 p-1 dark:bg-zinc-900">
+  return (
+    <div className="flex flex-1 items-center justify-center bg-navy-50 px-6 py-16 dark:bg-navy-950">
+      <div className="w-full max-w-md animate-fade-in-up rounded-2xl border border-navy-100 bg-white p-8 shadow-sm dark:border-navy-800 dark:bg-navy-900">
+        <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight text-navy-700 dark:text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy-700 text-sm font-black text-gold-400 dark:bg-teal-500 dark:text-navy-950">
+            T
+          </span>
+          TRUNKS
+        </Link>
+
+        <h1 className="mt-6 text-2xl font-semibold text-navy-950 dark:text-white">Create your account</h1>
+        <p className="mt-1 text-sm text-navy-600 dark:text-navy-100">Join TRUNKS as a candidate or recruiter.</p>
+
+        <div className="mt-6 grid grid-cols-2 gap-2 rounded-full bg-navy-50 p-1 dark:bg-navy-950">
           <button
             type="button"
             onClick={() => setRole(UserRole.CANDIDATE)}
             className={`rounded-full py-2 text-sm font-medium transition-colors ${
               role === UserRole.CANDIDATE
-                ? "bg-white text-zinc-950 shadow-sm dark:bg-zinc-800 dark:text-white"
-                : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                ? "bg-white text-navy-950 shadow-sm dark:bg-navy-800 dark:text-white"
+                : "text-navy-500 hover:text-navy-800 dark:text-navy-100 dark:hover:text-white"
             }`}
           >
             I&apos;m a Candidate
@@ -85,8 +96,8 @@ export default function SignupPage() {
             onClick={() => setRole(UserRole.RECRUITER)}
             className={`rounded-full py-2 text-sm font-medium transition-colors ${
               role === UserRole.RECRUITER
-                ? "bg-white text-zinc-950 shadow-sm dark:bg-zinc-800 dark:text-white"
-                : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                ? "bg-white text-navy-950 shadow-sm dark:bg-navy-800 dark:text-white"
+                : "text-navy-500 hover:text-navy-800 dark:text-navy-100 dark:hover:text-white"
             }`}
           >
             I&apos;m a Recruiter
@@ -96,7 +107,7 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
-              <label htmlFor="firstName" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="firstName" className={labelClasses}>
                 First name
               </label>
               <input
@@ -105,11 +116,11 @@ export default function SignupPage() {
                 required
                 value={firstName}
                 onChange={(event) => setFirstName(event.target.value)}
-                className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+                className={inputClasses}
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="lastName" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="lastName" className={labelClasses}>
                 Last name
               </label>
               <input
@@ -118,14 +129,14 @@ export default function SignupPage() {
                 required
                 value={lastName}
                 onChange={(event) => setLastName(event.target.value)}
-                className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+                className={inputClasses}
               />
             </div>
           </div>
 
           {role === UserRole.RECRUITER && (
-            <div className="flex flex-col gap-1">
-              <label htmlFor="companyName" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <div className="flex flex-col gap-1 animate-fade-in">
+              <label htmlFor="companyName" className={labelClasses}>
                 Company name
               </label>
               <input
@@ -134,13 +145,13 @@ export default function SignupPage() {
                 required
                 value={companyName}
                 onChange={(event) => setCompanyName(event.target.value)}
-                className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+                className={inputClasses}
               />
             </div>
           )}
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="email" className={labelClasses}>
               Email
             </label>
             <input
@@ -149,12 +160,12 @@ export default function SignupPage() {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+              className={inputClasses}
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="password" className={labelClasses}>
               Password
             </label>
             <input
@@ -164,9 +175,9 @@ export default function SignupPage() {
               minLength={8}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+              className={inputClasses}
             />
-            <p className="text-xs text-zinc-500 dark:text-zinc-500">
+            <p className="text-xs text-navy-500 dark:text-navy-100/70">
               At least 8 characters, with an uppercase letter and a number.
             </p>
           </div>
@@ -180,15 +191,15 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mt-2 flex h-11 items-center justify-center rounded-full bg-indigo-600 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-2 flex h-11 items-center justify-center rounded-full bg-teal-500 text-sm font-medium text-white shadow-sm shadow-teal-500/30 transition-all hover:-translate-y-0.5 hover:bg-teal-600 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
           >
             {isSubmitting ? "Creating account…" : "Create account"}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="mt-6 text-center text-sm text-navy-600 dark:text-navy-100">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link href="/login" className="font-medium text-teal-600 hover:text-teal-500 dark:text-teal-400">
             Log in
           </Link>
         </p>
